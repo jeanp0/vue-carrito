@@ -3,29 +3,37 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     products: [],
-    cart: {},
+    cart: JSON.parse(localStorage.getItem("cart")) || {},
   },
   mutations: {
     setProducts(state, payload) {
       state.products = payload;
     },
-    setCart(state, payload) {
+    setProductOnCart(state, payload) {
       const { id: productId } = payload;
       state.cart[productId] = { ...payload };
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     setEmptyCart(state) {
       state.cart = {};
+      localStorage.removeItem("cart");
     },
     increaseProduct(state, payload) {
       const productId = payload;
       state.cart[productId].amount++;
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     decreaseProduct(state, payload) {
       const productId = payload;
       state.cart[productId].amount--;
       if (!state.cart[productId].amount) {
-        delete state.cart[productId];
+        delete state.cart[payload];
       }
+      localStorage.setItem("cart", JSON.stringify(state.cart));
+    },
+    removeProduct(state, payload) {
+      delete state.cart[payload];
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
   },
   actions: {
@@ -46,7 +54,7 @@ export default createStore({
       alreadyContainsProduct
         ? (product.amount = state.cart[product.id].amount + 1)
         : (product.amount = 1);
-      commit("setCart", product);
+      commit("setProductOnCart", product);
     },
   },
   getters: {
