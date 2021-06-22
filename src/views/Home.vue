@@ -1,10 +1,12 @@
 <template>
-  <div class="home">
-    <h1>Home</h1>
+  <div class="container">
+    <h1>Productos</h1>
     <hr />
-    <pre>
-    {{ products }}
-    </pre>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+        <Card />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,9 +14,11 @@
 // @ is an alias to /src
 import { computed, onMounted } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import Card from "@/components/Card";
 
 export default {
   name: "Home",
+  components: { Card },
   setup() {
     const store = useStore();
     onMounted(async () => {
